@@ -7,6 +7,6 @@
 //
 // Leave both empty and the site runs in demo mode: everything stays in each visitor's own browser.
 window.ALEM_CONFIG = {
-  supabaseUrl: '',
-  supabaseKey: ''
+  supabaseUrl: 'https://wwyrkqhcllokkozabmnh.supabase.co',
+  supabaseKey: 'sb_publishable_txaqbo3BQNLygbOe_aiemA_KDbODAFk'
 };
