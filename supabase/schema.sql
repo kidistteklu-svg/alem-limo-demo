@@ -125,7 +125,7 @@ $$;
 
 -- ---------- team auth ----------
 create or replace function public.team_login(p_user text, p_pass text)
-returns jsonb language plpgsql security definer set search_path = public as $$
+returns jsonb language plpgsql security definer set search_path = public, extensions as $$
 declare m public.team_members; t uuid;
 begin
   delete from public.team_sessions where expires_at < now();
@@ -153,7 +153,7 @@ returns void language sql security definer set search_path = public as $$
 $$;
 
 create or replace function public.team_set_password(p_token uuid, p_pass text)
-returns void language plpgsql security definer set search_path = public as $$
+returns void language plpgsql security definer set search_path = public, extensions as $$
 declare m public.team_members;
 begin
   m := public._session_member(p_token);
@@ -162,7 +162,7 @@ begin
 end $$;
 
 create or replace function public.team_add(p_token uuid, p_name text, p_user text, p_pass text)
-returns void language plpgsql security definer set search_path = public as $$
+returns void language plpgsql security definer set search_path = public, extensions as $$
 declare m public.team_members; u text;
 begin
   m := public._session_member(p_token);

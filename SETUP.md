@@ -115,12 +115,37 @@ the request is there under Bookings → New. Delete the test record afterwards.
 | Vercel Hobby | 100 GB bandwidth/month | plenty — but Hobby is for **non-commercial** use by Vercel's terms. A business site should be on **Pro ($20/mo)**. Free alternative with commercial use allowed: Cloudflare Pages (same "import from GitHub" flow) |
 | Address lookup & mileage | OpenStreetMap community servers | fair-use, no guarantee; the site degrades gracefully ("quoted" distance). Swap to Google/Mapbox keys at real volume |
 
+## 8. Booking alerts — Telegram + email (optional, free)
+
+`supabase/notifications.sql` makes the database itself send alerts the moment
+a request arrives (and a confirmation email when the dispatcher clicks
+Confirm). No server, no monthly cost.
+
+1. **Telegram (instant alerts to the team's phones):** in Telegram, message
+   **@BotFather** → `/newbot` → pick a name and a username ending in `bot` →
+   copy the **token**. Open your new bot and tap **Start** (or create a group,
+   add the bot, and everyone in it gets alerts). Get the **chat ID** by
+   opening `https://api.telegram.org/bot<TOKEN>/getUpdates` in a browser and
+   reading `"chat":{"id":…}`.
+2. **Email (optional):** sign up at resend.com (free, 3,000 emails/month) →
+   add `alemtransportation.com` → add the DNS records it shows in Squarespace
+   → create an API key (`re_…`).
+3. Supabase → **SQL Editor** → paste `supabase/notifications.sql` → **Run**.
+4. Run the `update public.notify_settings …` statement at the bottom of that
+   file with your real values (token, chat ID, optional Resend key, the
+   dispatcher's inbox).
+5. Run `select public.notify_test();` — a test message appears in Telegram
+   (and the inbox, if email is set up). Done.
+
+Keys live in a private table the website cannot read. A notification failure
+never blocks a booking.
+
 ## What is still not included
 
-- **Notifications.** Nobody is texted or emailed when a request comes in; the
-  dispatcher checks the console. Adding SMS needs a Twilio account (~$1/month
-  + ~$0.008 per text) wired to a small Supabase Edge Function — a short
-  follow-up job once the client has the account.
+- **SMS texts.** Possible via Twilio (~$1/month + ~$0.008/text), but US
+  carriers require A2P 10DLC business registration first (a one-time ~$20 and
+  a few days). Telegram covers the same need for free, so add SMS only if the
+  owner specifically wants texts.
 - **Online payment.** By design: the dispatcher quotes and accepts each ride.
 
 ## Security model, in one paragraph

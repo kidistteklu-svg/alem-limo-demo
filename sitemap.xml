@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://www.alemtransportation.com/</loc>
+    <lastmod>2026-10-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://www.alemtransportation.com/images/hero-limo-night.jpg</image:loc>
+      <image:title>Alem Luxury Transportation, chauffeured limo service in DC, Virginia and Maryland</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.alemtransportation.com/images/fleet-suv.jpg</image:loc>
+      <image:title>Luxury SUV, Cadillac Escalade chauffeur service</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.alemtransportation.com/images/fleet-sprinter.jpg</image:loc>
+      <image:title>Executive Mercedes-Benz Sprinter van for group transportation</image:title>
+    </image:image>
+  </url>
+</urlset>
