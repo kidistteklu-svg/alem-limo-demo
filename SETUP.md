@@ -140,6 +140,70 @@ Confirm). No server, no monthly cost.
 Keys live in a private table the website cannot read. A notification failure
 never blocks a booking.
 
+**What gets sent:** new website request → Telegram + dispatcher email +
+"we received your request" email to the customer. Dispatcher clicks Confirm →
+"Ride confirmed" to Telegram + "your ride is confirmed" email to the customer.
+Mark Completed → "Ride completed" to Telegram.
+
+### Ride reminders (1 hour and 30 minutes before pickup)
+
+Run `supabase/reminders.sql` once (after notifications.sql). It turns on
+Supabase's scheduler (pg_cron), which checks every 5 minutes and posts
+"Reminder, pickup in 1 hour" and "Reminder, pickup in 30 minutes" to the Telegram chat for
+every confirmed ride, each exactly once (Eastern time). At the 1-hour mark the
+customer also gets a reminder email if email is configured. Check it's
+scheduled with `select jobname, schedule, active from cron.job;`.
+
+### Confirm rides from Telegram (optional, recommended)
+
+Each "New ride request" message carries a **Confirm ride** button. Pressing it
+marks the ride confirmed, which sends the customer's confirmation email and the
+"Ride confirmed" message, without opening the console. It needs one small
+server function in the client's Supabase project:
+
+1. Supabase → **Edge Functions → Deploy a new function → Via Editor**. Name it
+   exactly `telegram-webhook`. In the editor, delete the sample code entirely
+   (it is a "hello world" that demands an API key and will answer every
+   button press with 401) and paste the full contents of
+   `supabase/functions/telegram-webhook/index.ts`, then click **Deploy**.
+   To check what is really deployed: open the function → **Code** tab; the
+   first lines must mention `telegram-webhook` and `withSupabase({ auth: "none" }`.
+2. Open the function → **Details / Settings** → turn **Verify JWT** off
+   (Telegram cannot send a Supabase token).
+3. **Edge Functions → Secrets** → add three secrets:
+   `TELEGRAM_BOT_TOKEN` (the BotFather token), `TELEGRAM_CHAT_ID` (the dispatch
+   chat id), `TELEGRAM_WEBHOOK_SECRET` (the random string registered with
+   Telegram; the developer provides it when the webhook is set).
+4. The webhook itself is registered with Telegram once by the developer
+   (`setWebhook` with the function URL and the secret). After that, make a test
+   booking and press **Confirm ride** on the message.
+
+Only people in the dispatch chat can see or press the button, and the function
+ignores presses from any other chat.
+
+### If Telegram messages don't arrive
+
+Every message is a row in the outbox; it is sent immediately and retried up
+to 5 times (about a minute apart) if the call times out or fails. Paste this in
+the SQL Editor and read the results top to bottom:
+
+```sql
+select telegram_token is not null as has_token, telegram_chat_id, email_to from public.notify_settings;
+select id, kind, attempts, sent_at, last_error, created_at from public.notify_outbox order by id desc limit 10;
+select public.notify_test();
+```
+
+- `has_token` false or `telegram_chat_id` empty → the UPDATE with your keys
+  was never run (or ran before notifications.sql created the table). Run it.
+- Outbox rows with `sent_at` filled → delivered. `sent_at` empty and
+  `attempts` below 5 → still retrying (wait a minute). `attempts` 5 with a
+  `last_error` → gave up; the error says why (404/401 = wrong token, 400 =
+  wrong chat ID, "Timeout" = Telegram unreachable from the database).
+- `last_error` "channel not configured" → that channel's keys were missing
+  when the message was created (for email that is normal until Resend is set up).
+- No rows at all → the trigger never ran; make sure notifications.sql was run
+  after schema.sql and that the booking was made on the live site, not the demo.
+
 ## What is still not included
 
 - **SMS texts.** Possible via Twilio (~$1/month + ~$0.008/text), but US

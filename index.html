@@ -165,7 +165,7 @@
             <option>Point-to-Point</option><option>Airport Transfer</option>
           </select></div>
         <div style="text-align:left"><div style="font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:#d4af37;margin-bottom:7px">Date</div>
-          <input type="date" min="{{ today }}" value="{{ date }}" onChange="{{ onDate }}" aria-label="Pickup date" style="width:100%;box-sizing:border-box;background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:11px 12px;font:400 14px Jost;color-scheme:dark"></div>
+          <input type="date" min="{{ today }}" value="{{ date }}" onChange="{{ onDate }}" onClick="{{ pickDate }}" aria-label="Pickup date" style="width:100%;box-sizing:border-box;background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:11px 12px;font:400 14px Jost;color-scheme:dark"></div>
         <div style="text-align:left"><div style="font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:#d4af37;margin-bottom:7px">Passengers</div>
           <select value="{{ pax }}" onChange="{{ onPax }}" aria-label="Passengers" style="width:100%;box-sizing:border-box;background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px;font:400 14px Jost">
             <option>1–3</option><option>4–6</option><option>7–14</option><option>15+</option>
@@ -381,9 +381,14 @@
       <sc-if value="{{ isStep1 }}" hint-placeholder-val="{{ false }}">
         <div style="font-family:Cinzel,serif;font-size:18px;letter-spacing:.08em;color:#f8e58c;margin-bottom:18px">2 · Date &amp; Time</div>
         <div style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#9a917c;margin-bottom:10px">Date</div>
-        <input type="date" min="{{ today }}" max="{{ maxDate }}" value="{{ date }}" onChange="{{ onDate }}" aria-label="Pickup date" style="width:100%;box-sizing:border-box;background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px 14px;font:400 15px Jost;margin-bottom:20px;color-scheme:dark">
+        <input type="date" min="{{ today }}" max="{{ maxDate }}" value="{{ date }}" onChange="{{ onDate }}" onClick="{{ pickDate }}" aria-label="Pickup date" style="width:100%;box-sizing:border-box;background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px 14px;font:400 15px Jost;margin-bottom:20px;color-scheme:dark">
         <div style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#9a917c;margin-bottom:10px">Pickup time</div>
-        <input type="time" min="{{ openFrom }}" max="{{ openTo }}" step="900" value="{{ time }}" onChange="{{ onTime }}" aria-label="Pickup time" style="width:100%;box-sizing:border-box;background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px 14px;font:400 15px Jost;margin-bottom:10px;color-scheme:dark">
+        <select value="{{ time }}" onChange="{{ onTime }}" aria-label="Pickup time" style="width:100%;box-sizing:border-box;background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px 14px;font:400 15px Jost;margin-bottom:10px;cursor:pointer">
+          <option value="">Select a pickup time</option>
+          <sc-for list="{{ timeOpts }}" as="t" hint-placeholder-count="0">
+            <option value="{{ t.v }}">{{ t.label }}</option>
+          </sc-for>
+        </select>
         <div style="font-size:12.5px;color:#8f846a;margin-bottom:14px">{{ hoursNote }}</div>
         <sc-if value="{{ timeErrF }}" hint-placeholder-val="{{ false }}">
           <div role="alert" style="font-size:13px;color:#c96a5a;margin-bottom:16px">{{ timeMsg }}</div>
@@ -489,7 +494,7 @@
           </div>
         </div>
         <sc-if value="{{ areaOver }}" hint-placeholder-val="{{ false }}">
-          <div style="font-size:12.5px;line-height:1.6;color:#c96a5a;margin-bottom:14px">{{ areaMsg }}</div>
+          <div role="alert" style="background:rgba(201,106,90,.08);border:1px solid rgba(201,106,90,.5);padding:14px 16px;font-size:13.5px;line-height:1.7;color:#e0a89c;margin-bottom:14px">This pickup is about {{ areaMiles }} miles from our service area ({{ svcLabel }}, {{ svcRadius }}-mile radius), which is farther than we can book online. Please call or text <a href="tel:2405952259" style="color:#f8e58c;white-space:nowrap">(240)-595-2259</a> and we will arrange this trip personally.</div>
         </sc-if>
         <div style="display:flex;gap:10px">
           <button onClick="{{ confBack }}" style="flex:0 0 auto;background:none;border:1px solid rgba(212,175,55,.4);color:#d4af37;font:500 12px Jost;letter-spacing:.2em;text-transform:uppercase;padding:14px 20px;cursor:pointer">Back</button>
@@ -511,7 +516,8 @@
             <div>{{ dateNice }} at {{ timeNice }}</div>
             <div>{{ routeLine }}</div>
             <div>{{ phone }} · {{ email }}</div>
-            <div>Estimated: <span style="color:#f8e58c">{{ estimate }}</span></div>
+            <div>Estimated total: <span style="color:#f8e58c">{{ estimate }}</span></div>
+            <div>Distance: <span style="color:#f8e58c">{{ distLabel }}</span></div>
           </div>
           <button onClick="{{ reset }}" style="background:none;border:1px solid rgba(212,175,55,.4);color:#d4af37;font:500 12px Jost;letter-spacing:.2em;text-transform:uppercase;padding:14px 24px;cursor:pointer">Book Another Ride</button>
         </div>
@@ -649,8 +655,8 @@
           <div style="font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#9a917c;margin-bottom:12px">Add an off-site trip</div>
           <div style="background:#131109;border:1px solid rgba(212,175,55,.2);padding:16px 20px;margin-bottom:24px">
             <div class="formGrid" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px">
-              <input type="date" value="{{ osDate }}" onChange="{{ onOsDate }}" aria-label="Trip date" style="background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:11px 13px;font:400 14px Jost;color-scheme:dark">
-              <input type="time" value="{{ osTime }}" onChange="{{ onOsTime }}" aria-label="Trip time" style="background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:11px 13px;font:400 14px Jost;color-scheme:dark">
+              <input type="date" value="{{ osDate }}" onChange="{{ onOsDate }}" onClick="{{ pickDate }}" aria-label="Trip date" style="background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:11px 13px;font:400 14px Jost;color-scheme:dark">
+              <input type="time" value="{{ osTime }}" onChange="{{ onOsTime }}" onClick="{{ pickDate }}" aria-label="Trip time" style="background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:11px 13px;font:400 14px Jost;color-scheme:dark">
               <select value="{{ osVeh }}" onChange="{{ onOsVeh }}" aria-label="Vehicle" style="background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:11px 13px;font:400 14px Jost">
                 <option>Premium Sedan</option><option>Luxury SUV</option><option>Executive Sprinter</option><option>Shuttle &amp; Limo Bus</option>
               </select>
@@ -725,9 +731,9 @@
           <div style="font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#9a917c;margin-bottom:12px">Booking rules</div>
           <div style="background:#131109;border:1px solid rgba(212,175,55,.2);padding:16px 20px;display:flex;gap:14px 26px;flex-wrap:wrap;align-items:center;margin-bottom:10px">
             <span style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#9a917c">Open</span>
-              <input type="time" value="{{ sOpenFrom }}" onChange="{{ onOpenFrom }}" aria-label="Dispatch opens at" style="background:#0b0a08;border:1px solid rgba(212,175,55,.3);color:#f8e58c;padding:8px;font:500 14px Jost;color-scheme:dark">
+              <input type="time" value="{{ sOpenFrom }}" onChange="{{ onOpenFrom }}" onClick="{{ pickDate }}" aria-label="Dispatch opens at" style="background:#0b0a08;border:1px solid rgba(212,175,55,.3);color:#f8e58c;padding:8px;font:500 14px Jost;color-scheme:dark">
               <span style="font-size:12px;color:#9a917c">to</span>
-              <input type="time" value="{{ sOpenTo }}" onChange="{{ onOpenTo }}" aria-label="Dispatch closes at" style="background:#0b0a08;border:1px solid rgba(212,175,55,.3);color:#f8e58c;padding:8px;font:500 14px Jost;color-scheme:dark"></span>
+              <input type="time" value="{{ sOpenTo }}" onChange="{{ onOpenTo }}" onClick="{{ pickDate }}" aria-label="Dispatch closes at" style="background:#0b0a08;border:1px solid rgba(212,175,55,.3);color:#f8e58c;padding:8px;font:500 14px Jost;color-scheme:dark"></span>
             <span style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#9a917c">Cars</span>
               <input type="number" value="{{ sCars }}" onChange="{{ onCars }}" aria-label="Number of cars" style="width:60px;background:#0b0a08;border:1px solid rgba(212,175,55,.3);color:#f8e58c;padding:8px;font:500 14px Jost"></span>
             <span style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#9a917c">Min notice</span>
@@ -742,7 +748,7 @@
               <button onClick="{{ dc.pick }}" style="{{ dc.style }}">{{ dc.label }}</button>
             </sc-for>
           </div>
-          <input type="date" value="{{ adminDate }}" onChange="{{ onAdminDate }}" aria-label="Availability date" style="background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:10px 14px;font:400 15px Jost;margin-bottom:18px;color-scheme:dark">
+          <input type="date" value="{{ adminDate }}" onChange="{{ onAdminDate }}" onClick="{{ pickDate }}" aria-label="Availability date" style="background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:10px 14px;font:400 15px Jost;margin-bottom:18px;color-scheme:dark">
           <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px">
             <sc-for list="{{ adminSlots }}" as="t" hint-placeholder-count="6">
               <button onClick="{{ t.toggle }}" style="{{ t.style }}">{{ t.label }} · {{ t.state }}</button>
@@ -1173,7 +1179,7 @@ class Component extends DCLogic {
       conf: b.conf, est: fin != null && fin > 0 ? '$' + fin : (b.est || '-'), name: b.name, phone: this.fmtPhone(b.phone) || b.phone, veh: b.vehicle,
       time: this.fmt12(b.time), when: dNice + ' · ' + this.fmt12(b.time),
       what: (b.tripType || '') + ' · ' + b.vehicle,
-      route: (b.pickup || '-') + ' → ' + (b.dropoff || 'as directed'),
+      route: (b.pickup || '-') + ' → ' + (b.dropoff || 'as directed') + (b.miles != null && b.miles !== '' && !isNaN(+b.miles) ? ' · ' + (+b.miles).toFixed(1) + ' mi' : ''),
       flight: b.flight || '', hasFlight: !!b.flight,
       notes, hasNotes: !!notes,
       tel: 'tel:' + digits, sms: 'sms:' + digits,
@@ -1208,11 +1214,19 @@ class Component extends DCLogic {
     const step0Locked = !S.vehicle, step1Locked = !tCheck.ok, detailsLocked = !(puOk && doOk && phoneOk && emailOk);
     const est = this.estimateNum();
     const perMi = S.vehicle ? (this.rates()[S.vehicle] || 0) : 0;
-    const estimate = est == null ? '- select a car -' : S.distMi == null ? '$' + est + ' + $' + this.fmtRate(perMi) + '/mi' : '$' + est + ' · ' + S.distMi.toFixed(1) + ' mi';
+    const estimate = est == null ? '- select a car -' : S.distMi == null ? '$' + est + ' + $' + this.fmtRate(perMi) + '/mi' : '$' + est;
     const svcA = this.svc();
     const hubDist = S.pickupLL ? this.haversineMi(svcA.lat, svcA.lng, S.pickupLL.lat, S.pickupLL.lng) : null;
     const areaOver = hubDist != null && hubDist > svcA.radius;
-    const areaMsg = areaOver ? 'Heads up: this pickup is about ' + Math.round(hubDist) + ' miles from our ' + svcA.label + ' hub, outside the ' + svcA.radius + '-mile initial pickup area. You can still send the request, dispatch will confirm feasibility with you first.' : '';
+    const reqLocked = S.calcBusy || S.sending || areaOver;
+    const timeOpts = (() => {
+      const out = [], a = this.mins(c.openFrom), b = this.mins(c.openTo);
+      for (let m = (a == null ? 360 : a); m <= (b == null ? 1320 : b); m += 15) {
+        const v = String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0');
+        out.push({ v, label: this.fmt12(v) });
+      }
+      return out;
+    })();
     const dateNice = S.date ? new Date(S.date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }) : '';
     const approved = S.userReviews.filter(r => r.approved);
     const avg = approved.length ? (approved.reduce((a, r) => a + r.stars, 0) / approved.length).toFixed(1) : '0';
@@ -1261,7 +1275,8 @@ class Component extends DCLogic {
       pax: S.pax, onPax: e => set({ pax: e.target.value }),
       date: S.date, onDate: e => { const v = e.target.value; set({ date: v }); this.loadDay(v); },
       time: S.time, onTime: e => set({ time: e.target.value }),
-      openFrom: c.openFrom, openTo: c.openTo,
+      openFrom: c.openFrom, openTo: c.openTo, timeOpts,
+      pickDate: e => { const el = e.currentTarget || e.target; if (el && typeof el.showPicker === 'function') { try { el.showPicker(); } catch (x) {} } },
       hoursNote: 'Dispatch hours ' + this.fmt12(c.openFrom) + ' – ' + this.fmt12(c.openTo) + ' · at least ' + c.minLeadH + ' h notice · up to ' + c.maxAdvD + ' days ahead',
       timeErrF: !!(S.date && S.time && !tCheck.ok && tCheck.msg), timeOkF: !!tCheck.ok, timeMsg: tCheck.msg,
       heroQuote: () => this.go({ step: 0 }),
@@ -1358,12 +1373,12 @@ class Component extends DCLogic {
           : { l: 'Distance charge', v: S.calcBusy ? 'calculating…' : '$' + this.fmtRate(perMi) + '/mi, quoted' },
         ...extrasSel.map(x => ({ l: x.label.replace(/ \+\$\d+$/, '').replace(/, Free$/, ''), v: x.fee ? '+$' + x.fee : 'Free' }))
       ],
-      confLocked: S.calcBusy || S.sending,
-      confNextStyle: goldBtn(S.calcBusy || S.sending),
-      confNext: () => { if (!S.calcBusy && !S.sending) requestRide(); },
+      confLocked: reqLocked,
+      confNextStyle: goldBtn(reqLocked),
+      confNext: () => { if (!reqLocked) requestRide(); },
       confBack: () => this.go({ step: 2 }),
       reqErrF: !!S.reqErr, reqErrMsg: S.reqErr,
-      areaOver, areaMsg,
+      areaOver, areaMiles: hubDist == null ? 0 : Math.round(hubDist),
       vehicle: S.vehicle || '', confNo: S.confNo, dateNice, timeNice: this.fmt12(S.time),
       routeLine: this.addr('pu') + ' → ' + this.addr('do'),
       reset: () => this.go({ step: 0, vehicle: null, date: '', time: '', puStreet: '', puCity: '', puState: '', puZip: '', doStreet: '', doCity: '', doState: '', doZip: '', puSugs: [], doSugs: [], flight: '', name: '', phone: '', email: '', notes: '', confNo: '', extras: {}, pickupLL: null, dropLL: null, distMi: null, calcBusy: false, calcFail: false, emailErr: '', emailChecking: false, reqErr: '', dayBookings: [] }),
