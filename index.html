@@ -95,10 +95,15 @@
   a:hover{color:#f8e58c}
   input,select,textarea{outline:none}
   input:focus,textarea:focus,select:focus{border-color:#d4af37 !important}
-  ::placeholder{color:#6f6753}
+  ::placeholder{color:#8f846a}
   select option{background:#131109;color:#f5f1e6}
   input[type="date"]::-webkit-calendar-picker-indicator{filter:invert(80%) sepia(40%) saturate(400%) hue-rotate(5deg)}
   @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+  :focus-visible{outline:2px solid #f8e58c !important;outline-offset:3px}
+  .srOnly{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  .skipLink{position:absolute;left:-9999px;top:12px;z-index:999;background:#f8e58c;color:#141005;padding:12px 18px;font:600 13px Jost;letter-spacing:.1em;text-transform:uppercase}
+  .skipLink:focus{left:12px}
+  @media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}html{scroll-behavior:auto !important}}
   .formGrid input,.formGrid select,.formGrid textarea{width:100%;box-sizing:border-box;min-width:0;max-width:100%}
   #book-card{scroll-margin-top:84px}
   #book-card *{overflow-anchor:none}
@@ -121,6 +126,7 @@
 <script src="./store.js"></script>
 </helmet>
 
+<a href="#booking" class="skipLink">Skip to booking</a>
 <header class="site" style="position:fixed;top:0;left:0;right:0;z-index:90;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:13px 32px;background:rgba(11,10,8,.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(212,175,55,.22)">
   <a href="#top" style="display:flex;align-items:center;gap:12px">
     <span style="font-family:Cinzel,serif;font-weight:900;font-size:26px;line-height:1;background:linear-gradient(120deg,#8a6a1c,#d4af37 35%,#f8e58c 50%,#d4af37 65%,#8a6a1c);-webkit-background-clip:text;background-clip:text;color:transparent">A</span>
@@ -129,7 +135,7 @@
       <span style="font-size:9px;letter-spacing:.32em;color:#d4af37;text-transform:uppercase">Luxury Transportation</span>
     </span>
   </a>
-  <nav style="display:flex;gap:24px;font-size:12px;letter-spacing:.16em;text-transform:uppercase;flex-wrap:wrap">
+  <nav aria-label="Main" style="display:flex;gap:24px;font-size:12px;letter-spacing:.16em;text-transform:uppercase;flex-wrap:wrap">
     <a href="#about" style="color:#cfc7b2" style-hover="color:#f8e58c">About</a>
     <a href="#services" style="color:#cfc7b2" style-hover="color:#f8e58c">Services</a>
     <a href="#fleet" style="color:#cfc7b2" style-hover="color:#f8e58c">Fleet &amp; Rates</a>
@@ -140,8 +146,9 @@
   <a href="tel:2405952259" style="font-size:14px;letter-spacing:.06em;color:#d4af37;white-space:nowrap">(240)-595-2259</a>
 </header>
 
+<main>
 <section id="top" style="position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center">
-  <div style="position:absolute;inset:0"><image-slot id="hero-bg" shape="rect" placeholder="Hero photo, black limo at night, city lights" src="images/hero-limo-night.jpg"></image-slot></div>
+  <div style="position:absolute;inset:0" aria-hidden="true"><image-slot id="hero-bg" inert shape="rect" placeholder="Hero photo, black limo at night, city lights" src="images/hero-limo-night.jpg"></image-slot></div>
   <div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(11,10,8,.78) 0%,rgba(11,10,8,.55) 40%,rgba(11,10,8,.88) 100%)"></div>
   <div class="heroPad" style="position:relative;z-index:2;pointer-events:none;width:100%;max-width:1060px;padding:130px 24px 70px;text-align:center">
     <div style="pointer-events:auto;display:inline-flex;align-items:center;gap:14px;color:#d4af37;animation:fadeUp .8s ease both">
@@ -154,13 +161,13 @@
     <div style="pointer-events:auto;background:rgba(19,17,9,.92);border:1px solid rgba(212,175,55,.45);backdrop-filter:blur(8px);padding:22px;max-width:860px;margin:0 auto;animation:fadeUp .8s .45s ease both">
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;align-items:end">
         <div style="text-align:left"><div style="font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:#d4af37;margin-bottom:7px">Trip Type</div>
-          <select value="{{ tripType }}" onChange="{{ onTripType }}" style="width:100%;box-sizing:border-box;background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px;font:400 14px Jost">
+          <select value="{{ tripType }}" onChange="{{ onTripType }}" aria-label="Trip type" style="width:100%;box-sizing:border-box;background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px;font:400 14px Jost">
             <option>Point-to-Point</option><option>Airport Transfer</option>
           </select></div>
         <div style="text-align:left"><div style="font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:#d4af37;margin-bottom:7px">Date</div>
-          <input type="date" min="{{ today }}" value="{{ date }}" onChange="{{ onDate }}" style="width:100%;box-sizing:border-box;background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:11px 12px;font:400 14px Jost;color-scheme:dark"></div>
+          <input type="date" min="{{ today }}" value="{{ date }}" onChange="{{ onDate }}" aria-label="Pickup date" style="width:100%;box-sizing:border-box;background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:11px 12px;font:400 14px Jost;color-scheme:dark"></div>
         <div style="text-align:left"><div style="font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:#d4af37;margin-bottom:7px">Passengers</div>
-          <select value="{{ pax }}" onChange="{{ onPax }}" style="width:100%;box-sizing:border-box;background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px;font:400 14px Jost">
+          <select value="{{ pax }}" onChange="{{ onPax }}" aria-label="Passengers" style="width:100%;box-sizing:border-box;background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px;font:400 14px Jost">
             <option>1–3</option><option>4–6</option><option>7–14</option><option>15+</option>
           </select></div>
         <button onClick="{{ heroQuote }}" style="background:linear-gradient(120deg,#b8912c,#e8c85c 45%,#f8e58c 55%,#b8912c);color:#141005;border:none;font:600 13px Jost;letter-spacing:.18em;text-transform:uppercase;padding:14px 18px;cursor:pointer" style-hover="filter:brightness(1.1)">Get Instant Quote</button>
@@ -195,7 +202,7 @@
           <div><div style="font-family:Cinzel,serif;font-size:15px;letter-spacing:.1em;color:#f5f1e6;margin-bottom:6px">Local &amp; Interstate Travel</div><div style="font-size:14px;line-height:1.65;color:#9a917c">Local DMV transit or out-of-state charter service, we have you covered. Out-of-state trips need just 1 hour advance notice.</div></div></div>
       </div>
     </div>
-    <div style="height:420px"><image-slot id="about-photo" shape="rect" placeholder="Luxury limousine interior" src="images/about-interior.jpg"></image-slot></div>
+    <div style="height:420px"><image-slot id="about-photo" inert aria-hidden="true" shape="rect" placeholder="Luxury limousine interior" src="images/about-interior.jpg"></image-slot><span class="srOnly">Photo: luxury limousine interior with leather seating and ambient lighting</span></div>
   </div>
 </section>
 
@@ -228,7 +235,7 @@
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:22px;margin-top:44px">
       <sc-for list="{{ fleetCards }}" as="f" hint-placeholder-count="4">
         <div style="background:#131109;border:1px solid rgba(212,175,55,.2);display:flex;flex-direction:column">
-          <div style="height:180px"><image-slot id="{{ f.slotId }}" shape="rect" placeholder="{{ f.ph }}" src="{{ f.img }}"></image-slot></div>
+          <div style="height:180px"><image-slot id="{{ f.slotId }}" inert aria-hidden="true" shape="rect" placeholder="{{ f.ph }}" src="{{ f.img }}"></image-slot><span class="srOnly">Photo: {{ f.alt }}</span></div>
           <div style="padding:22px 22px 24px;display:flex;flex-direction:column;gap:10px;flex:1">
             <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px"><span style="font-family:Cinzel,serif;font-size:16px;letter-spacing:.06em;color:#f5f1e6">{{ f.name }}</span><span style="font-size:13px;color:#f8e58c;white-space:nowrap">from {{ f.rate }}</span></div>
             <div style="font-size:13px;color:#9a917c">{{ f.model }}</div>
@@ -266,24 +273,24 @@
     <div style="max-width:640px;margin:56px auto 0;background:#131109;border:1px solid rgba(212,175,55,.25);padding:30px 28px">
       <div style="font-family:Cinzel,serif;font-size:17px;letter-spacing:.1em;color:#f8e58c;margin-bottom:16px">Share Your Experience</div>
       <sc-if value="{{ revThanks }}" hint-placeholder-val="{{ false }}">
-        <div style="font-size:15px;color:#cfc7b2;font-style:italic">Thank you, your review was received and will appear once our team approves it.</div>
+        <div role="status" style="font-size:15px;color:#cfc7b2;font-style:italic">Thank you, your review was received and will appear once our team approves it.</div>
       </sc-if>
       <sc-if value="{{ revFormOpen }}" hint-placeholder-val="{{ true }}">
         <div style="display:flex;gap:6px;margin-bottom:14px">
           <sc-for list="{{ starPicks }}" as="st" hint-placeholder-count="5">
-            <button onClick="{{ st.pick }}" style="{{ st.style }}">★</button>
+            <button onClick="{{ st.pick }}" aria-label="{{ st.label }}" aria-pressed="{{ st.sel }}" style="{{ st.style }}">★</button>
           </sc-for>
         </div>
         <div class="formGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-          <input placeholder="Your name" value="{{ revName }}" onChange="{{ onRevName }}" style="background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px 14px;font:400 15px Jost">
-          <select value="{{ revTag }}" onChange="{{ onRevTag }}" style="background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px 14px;font:400 15px Jost">
+          <input placeholder="Your name" aria-label="Your name" value="{{ revName }}" onChange="{{ onRevName }}" style="background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px 14px;font:400 15px Jost">
+          <select value="{{ revTag }}" onChange="{{ onRevTag }}" aria-label="Type of trip you are reviewing" style="background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px 14px;font:400 15px Jost">
             <option>Airport Transfer</option><option>Corporate Event</option><option>Wedding</option><option>Prom</option><option>Senior Concierge</option><option>Special Occasion</option>
           </select>
-          <textarea placeholder="How was your ride?" value="{{ revText }}" onChange="{{ onRevText }}" rows="3" style="grid-column:1/-1;background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px 14px;font:400 15px Jost;resize:vertical"></textarea>
+          <textarea placeholder="How was your ride?" aria-label="Your review" value="{{ revText }}" onChange="{{ onRevText }}" rows="3" style="grid-column:1/-1;background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px 14px;font:400 15px Jost;resize:vertical"></textarea>
         </div>
         <button onClick="{{ submitReview }}" disabled="{{ revLocked }}" style="{{ revBtnStyle }}">Submit Review</button>
         <sc-if value="{{ revErrF }}" hint-placeholder-val="{{ false }}">
-          <div style="color:#c96a5a;font-size:13px;line-height:1.6;margin-top:12px">{{ revErrMsg }}</div>
+          <div role="alert" style="color:#c96a5a;font-size:13px;line-height:1.6;margin-top:12px">{{ revErrMsg }}</div>
         </sc-if>
       </sc-if>
     </div>
@@ -304,7 +311,7 @@
         <div><span style="color:#f8e58c">◆</span> &nbsp;Text updates: chauffeur name, photo &amp; live ETA</div>
       </div>
     </div>
-    <div style="height:340px"><image-slot id="standard-photo" shape="rect" placeholder="Chauffeur opening door / interior detail photo" src="images/chauffeur-door.jpg"></image-slot></div>
+    <div style="height:340px"><image-slot id="standard-photo" inert aria-hidden="true" shape="rect" placeholder="Chauffeur opening door / interior detail photo" src="images/chauffeur-door.jpg"></image-slot><span class="srOnly">Photo: chauffeur in a black suit holding open the rear door of a black luxury SUV at a hotel entrance</span></div>
   </div>
 </section>
 
@@ -317,8 +324,8 @@
     <div style="display:flex;flex-direction:column;gap:10px">
       <sc-for list="{{ faqs }}" as="q" hint-placeholder-count="5">
         <div style="background:#131109;border:1px solid rgba(212,175,55,.2)">
-          <button onClick="{{ q.toggle }}" style="width:100%;display:flex;justify-content:space-between;align-items:center;gap:16px;background:none;border:none;color:#f5f1e6;font:500 16px Jost;text-align:left;padding:18px 22px;cursor:pointer">
-            <span>{{ q.q }}</span><span style="color:#d4af37;font-size:18px">{{ q.chev }}</span>
+          <button onClick="{{ q.toggle }}" aria-expanded="{{ q.open }}" style="width:100%;display:flex;justify-content:space-between;align-items:center;gap:16px;background:none;border:none;color:#f5f1e6;font:500 16px Jost;text-align:left;padding:18px 22px;cursor:pointer">
+            <span>{{ q.q }}</span><span aria-hidden="true" style="color:#d4af37;font-size:18px">{{ q.chev }}</span>
           </button>
           <sc-if value="{{ q.open }}" hint-placeholder-val="{{ false }}">
             <div style="padding:0 22px 20px;font-size:14.5px;line-height:1.7;color:#9a917c">{{ q.a }}</div>
@@ -342,7 +349,8 @@
       </div>
     </div>
     <div id="book-card" style="background:#131109;border:1px solid rgba(212,175,55,.3);padding:34px 30px 38px">
-      <div style="display:flex;gap:8px;margin-bottom:26px">
+      <div class="srOnly" role="status">{{ stepLabel }}</div>
+      <div style="display:flex;gap:8px;margin-bottom:26px" aria-hidden="true">
         <sc-for list="{{ stepDots }}" as="d" hint-placeholder-count="5">
           <div style="{{ d.style }}"></div>
         </sc-for>
@@ -356,7 +364,7 @@
             <button onClick="{{ o.pick }}" style="{{ o.style }}">{{ o.name }}</button>
           </sc-for>
         </div>
-        <div style="font-size:12.5px;color:#6f6753;margin-bottom:14px">Tap a car to continue.</div>
+        <div style="font-size:12.5px;color:#8f846a;margin-bottom:14px">Tap a car to continue.</div>
         <div class="formGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
           <sc-for list="{{ vehicleCards }}" as="v" hint-placeholder-count="4">
             <button onClick="{{ v.pick }}" disabled="{{ v.off }}" style="{{ v.style }}">
@@ -373,15 +381,15 @@
       <sc-if value="{{ isStep1 }}" hint-placeholder-val="{{ false }}">
         <div style="font-family:Cinzel,serif;font-size:18px;letter-spacing:.08em;color:#f8e58c;margin-bottom:18px">2 · Date &amp; Time</div>
         <div style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#9a917c;margin-bottom:10px">Date</div>
-        <input type="date" min="{{ today }}" max="{{ maxDate }}" value="{{ date }}" onChange="{{ onDate }}" style="width:100%;box-sizing:border-box;background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px 14px;font:400 15px Jost;margin-bottom:20px;color-scheme:dark">
+        <input type="date" min="{{ today }}" max="{{ maxDate }}" value="{{ date }}" onChange="{{ onDate }}" aria-label="Pickup date" style="width:100%;box-sizing:border-box;background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px 14px;font:400 15px Jost;margin-bottom:20px;color-scheme:dark">
         <div style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#9a917c;margin-bottom:10px">Pickup time</div>
-        <input type="time" min="{{ openFrom }}" max="{{ openTo }}" step="900" value="{{ time }}" onChange="{{ onTime }}" style="width:100%;box-sizing:border-box;background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px 14px;font:400 15px Jost;margin-bottom:10px;color-scheme:dark">
-        <div style="font-size:12.5px;color:#6f6753;margin-bottom:14px">{{ hoursNote }}</div>
+        <input type="time" min="{{ openFrom }}" max="{{ openTo }}" step="900" value="{{ time }}" onChange="{{ onTime }}" aria-label="Pickup time" style="width:100%;box-sizing:border-box;background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px 14px;font:400 15px Jost;margin-bottom:10px;color-scheme:dark">
+        <div style="font-size:12.5px;color:#8f846a;margin-bottom:14px">{{ hoursNote }}</div>
         <sc-if value="{{ timeErrF }}" hint-placeholder-val="{{ false }}">
-          <div style="font-size:13px;color:#c96a5a;margin-bottom:16px">{{ timeMsg }}</div>
+          <div role="alert" style="font-size:13px;color:#c96a5a;margin-bottom:16px">{{ timeMsg }}</div>
         </sc-if>
         <sc-if value="{{ timeOkF }}" hint-placeholder-val="{{ false }}">
-          <div style="font-size:13px;color:#8fbf7f;margin-bottom:16px">{{ timeMsg }}</div>
+          <div role="status" style="font-size:13px;color:#8fbf7f;margin-bottom:16px">{{ timeMsg }}</div>
         </sc-if>
         <div style="display:flex;gap:10px">
           <button onClick="{{ back }}" style="flex:0 0 auto;background:none;border:1px solid rgba(212,175,55,.4);color:#d4af37;font:500 12px Jost;letter-spacing:.2em;text-transform:uppercase;padding:14px 20px;cursor:pointer">Back</button>
@@ -391,11 +399,12 @@
 
       <sc-if value="{{ isStep2 }}" hint-placeholder-val="{{ false }}">
         <div style="font-family:Cinzel,serif;font-size:18px;letter-spacing:.08em;color:#f8e58c;margin-bottom:18px">3 · Trip Details</div>
+        <div class="srOnly" role="status">{{ sugNote }}</div>
         <div style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#9a917c;margin-bottom:10px">Pickup location</div>
         <div style="position:relative;margin-bottom:12px">
-          <input placeholder="Street address *" value="{{ puStreet }}" onChange="{{ onPuStreet }}" onKeyDown="{{ onPuKey }}" onBlur="{{ onPuBlur }}" style="width:100%;box-sizing:border-box;background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px 14px;font:400 15px Jost">
+          <input placeholder="Street address *" aria-label="Pickup street address" autocomplete="off" value="{{ puStreet }}" onChange="{{ onPuStreet }}" onKeyDown="{{ onPuKey }}" onBlur="{{ onPuBlur }}" style="width:100%;box-sizing:border-box;background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px 14px;font:400 15px Jost">
           <sc-if value="{{ puSugOpen }}" hint-placeholder-val="{{ false }}">
-            <div style="position:absolute;top:100%;left:0;right:0;z-index:40;background:#131109;border:1px solid rgba(212,175,55,.5);max-height:190px;overflow:auto;box-shadow:0 12px 30px rgba(0,0,0,.6)">
+            <div role="group" aria-label="Address suggestions" style="position:absolute;top:100%;left:0;right:0;z-index:40;background:#131109;border:1px solid rgba(212,175,55,.5);max-height:190px;overflow:auto;box-shadow:0 12px 30px rgba(0,0,0,.6)">
               <sc-for list="{{ puSugs }}" as="sg" hint-placeholder-count="0">
                 <button onClick="{{ sg.pick }}" style="display:block;width:100%;text-align:left;background:none;border:none;border-bottom:1px solid rgba(212,175,55,.12);color:#cfc7b2;font:400 13px Jost;padding:10px 12px;cursor:pointer" style-hover="background:#1b180e;color:#f8e58c">{{ sg.label }}</button>
               </sc-for>
@@ -403,15 +412,15 @@
           </sc-if>
         </div>
         <div class="formGrid" style="display:grid;grid-template-columns:1.7fr .6fr .8fr;gap:12px;margin-bottom:18px">
-          <input placeholder="City *" value="{{ puCity }}" onChange="{{ onPuCity }}" style="background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px 14px;font:400 15px Jost">
-          <input placeholder="State" value="{{ puState }}" onChange="{{ onPuState }}" style="background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px 14px;font:400 15px Jost">
-          <input placeholder="ZIP" value="{{ puZip }}" onChange="{{ onPuZip }}" style="background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px 14px;font:400 15px Jost">
+          <input placeholder="City *" aria-label="Pickup city" value="{{ puCity }}" onChange="{{ onPuCity }}" style="background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px 14px;font:400 15px Jost">
+          <input placeholder="State" aria-label="Pickup state" value="{{ puState }}" onChange="{{ onPuState }}" style="background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px 14px;font:400 15px Jost">
+          <input placeholder="ZIP" aria-label="Pickup ZIP code" value="{{ puZip }}" onChange="{{ onPuZip }}" style="background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px 14px;font:400 15px Jost">
         </div>
         <div style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#9a917c;margin-bottom:10px">Drop-off location</div>
         <div style="position:relative;margin-bottom:12px">
-          <input placeholder="Street address *" value="{{ doStreet }}" onChange="{{ onDoStreet }}" onKeyDown="{{ onDoKey }}" onBlur="{{ onDoBlur }}" style="width:100%;box-sizing:border-box;background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px 14px;font:400 15px Jost">
+          <input placeholder="Street address *" aria-label="Drop-off street address" autocomplete="off" value="{{ doStreet }}" onChange="{{ onDoStreet }}" onKeyDown="{{ onDoKey }}" onBlur="{{ onDoBlur }}" style="width:100%;box-sizing:border-box;background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px 14px;font:400 15px Jost">
           <sc-if value="{{ doSugOpen }}" hint-placeholder-val="{{ false }}">
-            <div style="position:absolute;top:100%;left:0;right:0;z-index:40;background:#131109;border:1px solid rgba(212,175,55,.5);max-height:190px;overflow:auto;box-shadow:0 12px 30px rgba(0,0,0,.6)">
+            <div role="group" aria-label="Address suggestions" style="position:absolute;top:100%;left:0;right:0;z-index:40;background:#131109;border:1px solid rgba(212,175,55,.5);max-height:190px;overflow:auto;box-shadow:0 12px 30px rgba(0,0,0,.6)">
               <sc-for list="{{ doSugs }}" as="sg" hint-placeholder-count="0">
                 <button onClick="{{ sg.pick }}" style="display:block;width:100%;text-align:left;background:none;border:none;border-bottom:1px solid rgba(212,175,55,.12);color:#cfc7b2;font:400 13px Jost;padding:10px 12px;cursor:pointer" style-hover="background:#1b180e;color:#f8e58c">{{ sg.label }}</button>
               </sc-for>
@@ -419,21 +428,21 @@
           </sc-if>
         </div>
         <div class="formGrid" style="display:grid;grid-template-columns:1.7fr .6fr .8fr;gap:12px;margin-bottom:18px">
-          <input placeholder="City *" value="{{ doCity }}" onChange="{{ onDoCity }}" style="background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px 14px;font:400 15px Jost">
-          <input placeholder="State" value="{{ doState }}" onChange="{{ onDoState }}" style="background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px 14px;font:400 15px Jost">
-          <input placeholder="ZIP" value="{{ doZip }}" onChange="{{ onDoZip }}" style="background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px 14px;font:400 15px Jost">
+          <input placeholder="City *" aria-label="Drop-off city" value="{{ doCity }}" onChange="{{ onDoCity }}" style="background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px 14px;font:400 15px Jost">
+          <input placeholder="State" aria-label="Drop-off state" value="{{ doState }}" onChange="{{ onDoState }}" style="background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px 14px;font:400 15px Jost">
+          <input placeholder="ZIP" aria-label="Drop-off ZIP code" value="{{ doZip }}" onChange="{{ onDoZip }}" style="background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px 14px;font:400 15px Jost">
         </div>
         <sc-if value="{{ isAirport }}" hint-placeholder-val="{{ false }}">
-          <input placeholder="Flight number, for arrival tracking" value="{{ flight }}" onChange="{{ onFlight }}" style="width:100%;box-sizing:border-box;background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px 14px;font:400 15px Jost;margin-bottom:18px">
+          <input placeholder="Flight number, for arrival tracking" aria-label="Flight number" value="{{ flight }}" onChange="{{ onFlight }}" style="width:100%;box-sizing:border-box;background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px 14px;font:400 15px Jost;margin-bottom:18px">
         </sc-if>
         <div style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#9a917c;margin-bottom:10px">Contact</div>
         <div class="formGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:8px">
-          <input placeholder="Mobile phone *" value="{{ phone }}" onChange="{{ onPhone }}" style="background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px 14px;font:400 15px Jost">
-          <input placeholder="Email *" value="{{ email }}" onChange="{{ onEmail }}" style="background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px 14px;font:400 15px Jost">
-          <input placeholder="Name (optional)" value="{{ name }}" onChange="{{ onName }}" style="grid-column:1/-1;background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px 14px;font:400 15px Jost">
+          <input placeholder="Mobile phone *" aria-label="Mobile phone, required" type="tel" autocomplete="tel" value="{{ phone }}" onChange="{{ onPhone }}" style="background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px 14px;font:400 15px Jost">
+          <input placeholder="Email *" aria-label="Email, required" type="email" autocomplete="email" value="{{ email }}" onChange="{{ onEmail }}" style="background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px 14px;font:400 15px Jost">
+          <input placeholder="Name (optional)" aria-label="Your name, optional" autocomplete="name" value="{{ name }}" onChange="{{ onName }}" style="grid-column:1/-1;background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px 14px;font:400 15px Jost">
         </div>
         <sc-if value="{{ contactErrF }}" hint-placeholder-val="{{ false }}">
-          <div style="font-size:13px;color:#c96a5a;margin-bottom:12px">{{ contactErrMsg }}</div>
+          <div role="alert" style="font-size:13px;color:#c96a5a;margin-bottom:12px">{{ contactErrMsg }}</div>
         </sc-if>
         <div style="height:8px"></div>
         <div style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#9a917c;margin-bottom:10px">Extras</div>
@@ -442,7 +451,7 @@
             <button onClick="{{ x.pick }}" style="{{ x.style }}">{{ x.label }}</button>
           </sc-for>
         </div>
-        <textarea placeholder="Notes, stops, special requests, occasion details" value="{{ notes }}" onChange="{{ onNotes }}" rows="2" style="width:100%;box-sizing:border-box;background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px 14px;font:400 15px Jost;resize:vertical;margin-bottom:18px"></textarea>
+        <textarea placeholder="Notes, stops, special requests, occasion details" aria-label="Notes and special requests" value="{{ notes }}" onChange="{{ onNotes }}" rows="2" style="width:100%;box-sizing:border-box;background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:12px 14px;font:400 15px Jost;resize:vertical;margin-bottom:18px"></textarea>
         <div style="display:flex;justify-content:space-between;align-items:center;background:#0b0a08;border:1px solid rgba(212,175,55,.3);padding:14px 16px;margin-bottom:20px">
           <span style="font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#9a917c">Estimated total</span>
           <span style="font-family:Cinzel,serif;font-size:20px;color:#f8e58c">{{ estimate }}</span>
@@ -451,24 +460,24 @@
           <button onClick="{{ back }}" style="flex:0 0 auto;background:none;border:1px solid rgba(212,175,55,.4);color:#d4af37;font:500 12px Jost;letter-spacing:.2em;text-transform:uppercase;padding:14px 20px;cursor:pointer">Back</button>
           <button onClick="{{ toConfirm }}" disabled="{{ detailsLocked }}" style="{{ nextStyle }}">Continue</button>
         </div>
-        <div style="font-size:12px;color:#6f6753;margin-top:14px;text-align:center">Next: review your trip and send the request.</div>
+        <div style="font-size:12px;color:#8f846a;margin-top:14px;text-align:center">Next: review your trip and send the request.</div>
       </sc-if>
 
       <sc-if value="{{ isStep3 }}" hint-placeholder-val="{{ false }}">
         <div style="font-family:Cinzel,serif;font-size:18px;letter-spacing:.08em;color:#f8e58c;margin-bottom:10px">4 · Review &amp; Request</div>
         <div style="font-size:13.5px;line-height:1.6;color:#9a917c;margin-bottom:16px">One last look. If anything is off, go back and adjust, nothing is charged now.</div>
         <div style="background:#0b0a08;border:1px solid rgba(212,175,55,.25);padding:4px 18px;margin-bottom:14px">
-          <div style="display:flex;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid rgba(212,175,55,.12)"><span style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#6f6753;padding-top:2px">Car</span><span style="font-size:14px;color:#f5f1e6;text-align:right">{{ vehicle }}</span></div>
-          <div style="display:flex;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid rgba(212,175,55,.12)"><span style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#6f6753;padding-top:2px">When</span><span style="font-size:14px;color:#f5f1e6;text-align:right">{{ dateNice }} · {{ timeNice }}</span></div>
-          <div style="display:flex;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid rgba(212,175,55,.12)"><span style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#6f6753;padding-top:2px">Pickup</span><span style="font-size:14px;color:#cfc7b2;text-align:right">{{ puLine }}</span></div>
-          <div style="display:flex;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid rgba(212,175,55,.12)"><span style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#6f6753;padding-top:2px">Drop-off</span><span style="font-size:14px;color:#cfc7b2;text-align:right">{{ doLine }}</span></div>
+          <div style="display:flex;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid rgba(212,175,55,.12)"><span style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#8f846a;padding-top:2px">Car</span><span style="font-size:14px;color:#f5f1e6;text-align:right">{{ vehicle }}</span></div>
+          <div style="display:flex;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid rgba(212,175,55,.12)"><span style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#8f846a;padding-top:2px">When</span><span style="font-size:14px;color:#f5f1e6;text-align:right">{{ dateNice }} · {{ timeNice }}</span></div>
+          <div style="display:flex;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid rgba(212,175,55,.12)"><span style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#8f846a;padding-top:2px">Pickup</span><span style="font-size:14px;color:#cfc7b2;text-align:right">{{ puLine }}</span></div>
+          <div style="display:flex;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid rgba(212,175,55,.12)"><span style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#8f846a;padding-top:2px">Drop-off</span><span style="font-size:14px;color:#cfc7b2;text-align:right">{{ doLine }}</span></div>
           <sc-if value="{{ hasFlightRow }}" hint-placeholder-val="{{ false }}">
-            <div style="display:flex;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid rgba(212,175,55,.12)"><span style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#6f6753;padding-top:2px">Flight</span><span style="font-size:14px;color:#cfc7b2;text-align:right">{{ flight }}</span></div>
+            <div style="display:flex;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid rgba(212,175,55,.12)"><span style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#8f846a;padding-top:2px">Flight</span><span style="font-size:14px;color:#cfc7b2;text-align:right">{{ flight }}</span></div>
           </sc-if>
           <sc-if value="{{ hasExtrasRow }}" hint-placeholder-val="{{ false }}">
-            <div style="display:flex;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid rgba(212,175,55,.12)"><span style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#6f6753;padding-top:2px">Extras</span><span style="font-size:14px;color:#cfc7b2;text-align:right">{{ extrasLine }}</span></div>
+            <div style="display:flex;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid rgba(212,175,55,.12)"><span style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#8f846a;padding-top:2px">Extras</span><span style="font-size:14px;color:#cfc7b2;text-align:right">{{ extrasLine }}</span></div>
           </sc-if>
-          <div style="display:flex;justify-content:space-between;gap:14px;padding:12px 0"><span style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#6f6753;padding-top:2px">Estimated miles</span><span style="font-size:14px;color:#cfc7b2;text-align:right">{{ distLabel }}</span></div>
+          <div style="display:flex;justify-content:space-between;gap:14px;padding:12px 0"><span style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#8f846a;padding-top:2px">Estimated miles</span><span style="font-size:14px;color:#cfc7b2;text-align:right">{{ distLabel }}</span></div>
         </div>
         <div style="background:#0b0a08;border:1px solid rgba(212,175,55,.3);padding:6px 16px 14px;margin-bottom:14px">
           <sc-for list="{{ bdRows }}" as="br" hint-placeholder-count="2">
@@ -487,15 +496,15 @@
           <button onClick="{{ confNext }}" disabled="{{ confLocked }}" style="{{ confNextStyle }}">Request Ride</button>
         </div>
         <sc-if value="{{ reqErrF }}" hint-placeholder-val="{{ false }}">
-          <div style="color:#c96a5a;font-size:13px;line-height:1.6;margin-top:14px;text-align:center">{{ reqErrMsg }}</div>
+          <div role="alert" style="color:#c96a5a;font-size:13px;line-height:1.6;margin-top:14px;text-align:center">{{ reqErrMsg }}</div>
         </sc-if>
-        <div style="font-size:12px;color:#6f6753;margin-top:14px;text-align:center">No charge now. Our dispatcher reviews every request and accepts it by text before the ride is final.</div>
+        <div style="font-size:12px;color:#8f846a;margin-top:14px;text-align:center">No charge now. Our dispatcher reviews every request and accepts it by text before the ride is final.</div>
       </sc-if>
 
       <sc-if value="{{ isStep4 }}" hint-placeholder-val="{{ false }}">
         <div style="text-align:center;padding:12px 0 4px">
           <div style="width:56px;height:56px;margin:0 auto 18px;display:flex;align-items:center;justify-content:center;border:1px solid #d4af37;transform:rotate(45deg)"><span style="transform:rotate(-45deg);color:#f8e58c;font-size:22px">✓</span></div>
-          <div style="font-family:Cinzel,serif;font-size:20px;letter-spacing:.08em;color:#f8e58c;margin-bottom:8px">Request Received</div>
+          <div role="status" style="font-family:Cinzel,serif;font-size:20px;letter-spacing:.08em;color:#f8e58c;margin-bottom:8px">Request Received</div>
           <div style="font-size:14px;line-height:1.7;color:#9a917c;margin-bottom:20px">Confirmation <span style="color:#f5f1e6;letter-spacing:.1em">{{ confNo }}</span>. Our dispatcher reviews every request, you'll get a text as soon as your ride is accepted.</div>
           <div style="background:#0b0a08;border:1px solid rgba(212,175,55,.25);padding:18px;text-align:left;font-size:14px;line-height:2;color:#cfc7b2;margin-bottom:24px">
             <div>{{ tripType }} · {{ vehicle }}</div>
@@ -511,6 +520,7 @@
   </div>
 </section>
 
+</main>
 <footer id="contact" style="border-top:1px solid rgba(212,175,55,.22);padding:60px 24px 40px;background:#0e0d0a">
   <div style="max-width:1100px;margin:0 auto;display:flex;flex-wrap:wrap;gap:36px;justify-content:space-between;align-items:flex-start">
     <div>
@@ -532,17 +542,17 @@
       <div><a href="#booking" style="color:#9a917c" style-hover="color:#f8e58c">Book Now</a></div>
     </div>
   </div>
-  <div class="footBottom" style="max-width:1100px;margin:36px auto 0;padding-top:20px;border-top:1px solid rgba(212,175,55,.12);font-size:12px;color:#6f6753;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+  <div class="footBottom" style="max-width:1100px;margin:36px auto 0;padding-top:20px;border-top:1px solid rgba(212,175,55,.12);font-size:12px;color:#8f846a;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
     <span>© 2026 Alem Luxury Transportation. All rights reserved.</span>
     <span>Women-owned &amp; operated · Licensed &amp; insured chauffeured transportation.</span>
-    <button onClick="{{ openAdmin }}" style="background:none;border:1px solid rgba(212,175,55,.3);color:#6f6753;font:500 10px Jost;letter-spacing:.22em;text-transform:uppercase;padding:8px 14px;cursor:pointer" style-hover="color:#f8e58c;border-color:#d4af37">Team Login</button>
+    <button onClick="{{ openAdmin }}" style="background:none;border:1px solid rgba(212,175,55,.3);color:#8f846a;font:500 10px Jost;letter-spacing:.22em;text-transform:uppercase;padding:8px 14px;cursor:pointer" style-hover="color:#f8e58c;border-color:#d4af37">Team Login</button>
   </div>
 </footer>
 
 <a href="#booking" class="bookNowFab" style="position:fixed;right:22px;bottom:22px;z-index:80;background:linear-gradient(120deg,#b8912c,#e8c85c 45%,#f8e58c 55%,#b8912c);color:#141005;font:600 12px Jost;letter-spacing:.2em;text-transform:uppercase;padding:15px 24px;box-shadow:0 8px 28px rgba(0,0,0,.5)" style-hover="filter:brightness(1.1)">Book Now</a>
 
 <sc-if value="{{ adminOpen }}" hint-placeholder-val="{{ false }}">
-  <div style="position:fixed;inset:0;z-index:200;background:#0b0a08;overflow:auto">
+  <div role="dialog" aria-modal="true" aria-label="Team console" style="position:fixed;inset:0;z-index:200;background:#0b0a08;overflow:auto">
 
     <sc-if value="{{ notAuthed }}" hint-placeholder-val="{{ true }}">
       <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;box-sizing:border-box">
@@ -550,13 +560,13 @@
           <div style="font-family:Cinzel,serif;font-weight:900;font-size:40px;line-height:1;background:linear-gradient(120deg,#8a6a1c,#d4af37 35%,#f8e58c 50%,#d4af37 65%,#8a6a1c);-webkit-background-clip:text;background-clip:text;color:transparent">A</div>
           <div style="font-family:Cinzel,serif;font-size:18px;letter-spacing:.14em;color:#f8e58c;margin:14px 0 6px">Team Console</div>
           <div style="font-size:13.5px;line-height:1.6;color:#9a917c;margin-bottom:24px">Sign in with your team username and password.</div>
-          <input placeholder="Username" value="{{ authUser }}" onChange="{{ onAuthUser }}" onKeyDown="{{ authKey }}" style="width:100%;box-sizing:border-box;background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:13px 14px;font:400 16px Jost;text-align:center;margin-bottom:12px">
-          <input type="password" placeholder="Password" value="{{ authPass }}" onChange="{{ onAuthPass }}" onKeyDown="{{ authKey }}" style="width:100%;box-sizing:border-box;background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:13px 14px;font:400 16px Jost;text-align:center;margin-bottom:12px">
+          <input placeholder="Username" aria-label="Username" autocomplete="username" value="{{ authUser }}" onChange="{{ onAuthUser }}" onKeyDown="{{ authKey }}" style="width:100%;box-sizing:border-box;background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:13px 14px;font:400 16px Jost;text-align:center;margin-bottom:12px">
+          <input type="password" placeholder="Password" aria-label="Password" autocomplete="current-password" value="{{ authPass }}" onChange="{{ onAuthPass }}" onKeyDown="{{ authKey }}" style="width:100%;box-sizing:border-box;background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:13px 14px;font:400 16px Jost;text-align:center;margin-bottom:12px">
           <button onClick="{{ authLogin }}" style="width:100%;background:linear-gradient(120deg,#b8912c,#e8c85c 45%,#f8e58c 55%,#b8912c);color:#141005;border:none;font:600 12px Jost;letter-spacing:.2em;text-transform:uppercase;padding:13px;cursor:pointer" style-hover="filter:brightness(1.1)">Sign In</button>
           <sc-if value="{{ authErrF }}" hint-placeholder-val="{{ false }}">
-            <div style="color:#c96a5a;font-size:13px;line-height:1.6;margin-top:12px">{{ authErrMsg }}</div>
+            <div role="alert" style="color:#c96a5a;font-size:13px;line-height:1.6;margin-top:12px">{{ authErrMsg }}</div>
           </sc-if>
-          <button onClick="{{ closeAdmin }}" style="background:none;border:none;color:#6f6753;font:400 12px Jost;letter-spacing:.16em;text-transform:uppercase;margin-top:20px;cursor:pointer" style-hover="color:#f8e58c">← Back to site</button>
+          <button onClick="{{ closeAdmin }}" style="background:none;border:none;color:#8f846a;font:400 12px Jost;letter-spacing:.16em;text-transform:uppercase;margin-top:20px;cursor:pointer" style-hover="color:#f8e58c">← Back to site</button>
         </div>
       </div>
     </sc-if>
@@ -591,13 +601,13 @@
               <div style="background:#131109;border:1px solid rgba(212,175,55,.25);padding:22px 20px">
                 <div style="font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#9a917c;margin-bottom:10px">{{ st.label }}</div>
                 <div style="font-family:Cinzel,serif;font-size:30px;color:#f8e58c">{{ st.value }}</div>
-                <div style="font-size:12px;color:#6f6753;margin-top:6px">{{ st.sub }}</div>
+                <div style="font-size:12px;color:#8f846a;margin-top:6px">{{ st.sub }}</div>
               </div>
             </sc-for>
           </div>
           <div style="font-family:Cinzel,serif;font-size:17px;letter-spacing:.1em;color:#f5f1e6;margin-bottom:14px">Today's Schedule</div>
           <sc-if value="{{ noToday }}" hint-placeholder-val="{{ true }}">
-            <div style="background:#131109;border:1px dashed rgba(212,175,55,.25);padding:26px;text-align:center;font-size:14px;font-style:italic;color:#6f6753;margin-bottom:36px">No rides scheduled today.</div>
+            <div style="background:#131109;border:1px dashed rgba(212,175,55,.25);padding:26px;text-align:center;font-size:14px;font-style:italic;color:#8f846a;margin-bottom:36px">No rides scheduled today.</div>
           </sc-if>
           <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:36px">
             <sc-for list="{{ todayRows }}" as="b" hint-placeholder-count="0">
@@ -611,7 +621,7 @@
           </div>
           <div style="font-family:Cinzel,serif;font-size:17px;letter-spacing:.1em;color:#f5f1e6;margin-bottom:14px">Coming Up</div>
           <sc-if value="{{ noNextUp }}" hint-placeholder-val="{{ true }}">
-            <div style="background:#131109;border:1px dashed rgba(212,175,55,.25);padding:26px;text-align:center;font-size:14px;font-style:italic;color:#6f6753">No upcoming reservations. New bookings appear here automatically.</div>
+            <div style="background:#131109;border:1px dashed rgba(212,175,55,.25);padding:26px;text-align:center;font-size:14px;font-style:italic;color:#8f846a">No upcoming reservations. New bookings appear here automatically.</div>
           </sc-if>
           <div style="display:flex;flex-direction:column;gap:10px">
             <sc-for list="{{ nextUpRows }}" as="b" hint-placeholder-count="0">
@@ -639,9 +649,9 @@
           <div style="font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#9a917c;margin-bottom:12px">Add an off-site trip</div>
           <div style="background:#131109;border:1px solid rgba(212,175,55,.2);padding:16px 20px;margin-bottom:24px">
             <div class="formGrid" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px">
-              <input type="date" value="{{ osDate }}" onChange="{{ onOsDate }}" style="background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:11px 13px;font:400 14px Jost;color-scheme:dark">
-              <input type="time" value="{{ osTime }}" onChange="{{ onOsTime }}" style="background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:11px 13px;font:400 14px Jost;color-scheme:dark">
-              <select value="{{ osVeh }}" onChange="{{ onOsVeh }}" style="background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:11px 13px;font:400 14px Jost">
+              <input type="date" value="{{ osDate }}" onChange="{{ onOsDate }}" aria-label="Trip date" style="background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:11px 13px;font:400 14px Jost;color-scheme:dark">
+              <input type="time" value="{{ osTime }}" onChange="{{ onOsTime }}" aria-label="Trip time" style="background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:11px 13px;font:400 14px Jost;color-scheme:dark">
+              <select value="{{ osVeh }}" onChange="{{ onOsVeh }}" aria-label="Vehicle" style="background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:11px 13px;font:400 14px Jost">
                 <option>Premium Sedan</option><option>Luxury SUV</option><option>Executive Sprinter</option><option>Shuttle &amp; Limo Bus</option>
               </select>
               <input placeholder="Customer name" value="{{ osName }}" onChange="{{ onOsName }}" style="background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:11px 13px;font:400 14px Jost">
@@ -651,13 +661,13 @@
               <input placeholder="Drop-off" value="{{ osDo }}" onChange="{{ onOsDo }}" style="background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:11px 13px;font:400 14px Jost">
               <button onClick="{{ addOffsite }}" style="background:none;border:1px solid rgba(212,175,55,.5);color:#d4af37;font:500 11px Jost;letter-spacing:.16em;text-transform:uppercase;padding:11px 13px;cursor:pointer" style-hover="color:#f8e58c">Add Trip</button>
             </div>
-            <div style="font-size:12.5px;color:#6f6753">For rides booked by phone or elsewhere. They land as confirmed, count toward car availability, and are included in earnings.</div>
+            <div style="font-size:12.5px;color:#8f846a">For rides booked by phone or elsewhere. They land as confirmed, count toward car availability, and are included in earnings.</div>
             <sc-if value="{{ osMsgF }}" hint-placeholder-val="{{ false }}">
               <div style="font-size:13px;color:#9a917c;margin-top:10px">{{ osMsg }}</div>
             </sc-if>
           </div>
           <sc-if value="{{ noFiltered }}" hint-placeholder-val="{{ false }}">
-            <div style="background:#131109;border:1px dashed rgba(212,175,55,.25);padding:30px;text-align:center;font-size:14px;font-style:italic;color:#6f6753">No reservations here yet.</div>
+            <div style="background:#131109;border:1px dashed rgba(212,175,55,.25);padding:30px;text-align:center;font-size:14px;font-style:italic;color:#8f846a">No reservations here yet.</div>
           </sc-if>
           <div style="display:flex;flex-direction:column;gap:14px">
             <sc-for list="{{ bookingRows }}" as="b" hint-placeholder-count="0">
@@ -673,15 +683,15 @@
                   <span style="font-family:Cinzel,serif;font-size:17px;color:#f8e58c">{{ b.est }}</span>
                 </div>
                 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px 24px;padding:16px 20px">
-                  <div><div style="font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#6f6753;margin-bottom:4px">When</div><div style="font-size:14px;color:#f5f1e6">{{ b.when }}</div></div>
-                  <div><div style="font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#6f6753;margin-bottom:4px">Passenger</div><div style="font-size:14px;color:#f5f1e6">{{ b.name }}</div><div style="font-size:13px;color:#9a917c">{{ b.phone }} · <a href="{{ b.tel }}">Call</a> · <a href="{{ b.sms }}">Text</a></div></div>
-                  <div><div style="font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#6f6753;margin-bottom:4px">Trip</div><div style="font-size:14px;color:#cfc7b2">{{ b.what }}</div></div>
-                  <div><div style="font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#6f6753;margin-bottom:4px">Route</div><div style="font-size:14px;color:#cfc7b2">{{ b.route }}</div></div>
+                  <div><div style="font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#8f846a;margin-bottom:4px">When</div><div style="font-size:14px;color:#f5f1e6">{{ b.when }}</div></div>
+                  <div><div style="font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#8f846a;margin-bottom:4px">Passenger</div><div style="font-size:14px;color:#f5f1e6">{{ b.name }}</div><div style="font-size:13px;color:#9a917c">{{ b.phone }} · <a href="{{ b.tel }}">Call</a> · <a href="{{ b.sms }}">Text</a></div></div>
+                  <div><div style="font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#8f846a;margin-bottom:4px">Trip</div><div style="font-size:14px;color:#cfc7b2">{{ b.what }}</div></div>
+                  <div><div style="font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#8f846a;margin-bottom:4px">Route</div><div style="font-size:14px;color:#cfc7b2">{{ b.route }}</div></div>
                   <sc-if value="{{ b.hasFlight }}" hint-placeholder-val="{{ false }}">
-                    <div><div style="font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#6f6753;margin-bottom:4px">Flight</div><div style="font-size:14px;color:#cfc7b2">{{ b.flight }}</div></div>
+                    <div><div style="font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#8f846a;margin-bottom:4px">Flight</div><div style="font-size:14px;color:#cfc7b2">{{ b.flight }}</div></div>
                   </sc-if>
                   <sc-if value="{{ b.hasNotes }}" hint-placeholder-val="{{ false }}">
-                    <div style="grid-column:1/-1"><div style="font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#6f6753;margin-bottom:4px">Extras &amp; Notes</div><div style="font-size:13.5px;line-height:1.6;color:#9a917c">{{ b.notes }}</div></div>
+                    <div style="grid-column:1/-1"><div style="font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#8f846a;margin-bottom:4px">Extras &amp; Notes</div><div style="font-size:13.5px;line-height:1.6;color:#9a917c">{{ b.notes }}</div></div>
                   </sc-if>
                 </div>
                 <div style="display:flex;gap:8px;padding:0 20px 16px;flex-wrap:wrap">
@@ -701,10 +711,10 @@
                     <button onClick="{{ b.unarchive }}" style="background:none;border:1px solid rgba(212,175,55,.4);color:#d4af37;font:500 11px Jost;letter-spacing:.14em;text-transform:uppercase;padding:8px 14px;cursor:pointer">Unarchive</button>
                   </sc-if>
                   <sc-if value="{{ b.isCompleted }}" hint-placeholder-val="{{ false }}">
-                    <button onClick="{{ b.remove }}" style="background:none;border:1px solid rgba(212,175,55,.25);color:#6f6753;font:500 11px Jost;letter-spacing:.14em;text-transform:uppercase;padding:8px 14px;cursor:pointer">Delete Record</button>
+                    <button onClick="{{ b.remove }}" style="background:none;border:1px solid rgba(212,175,55,.25);color:#8f846a;font:500 11px Jost;letter-spacing:.14em;text-transform:uppercase;padding:8px 14px;cursor:pointer">Delete Record</button>
                   </sc-if>
                   <span style="display:flex;align-items:center;gap:7px;margin-left:auto"><span style="font-size:11px;color:#9a917c">Final $</span>
-                  <input type="number" value="{{ b.finalVal }}" onChange="{{ b.onFinal }}" style="width:80px;background:#0b0a08;border:1px solid rgba(212,175,55,.3);color:#f8e58c;padding:7px;font:500 13px Jost"></span>
+                  <input type="number" value="{{ b.finalVal }}" onChange="{{ b.onFinal }}" aria-label="Final price in dollars" style="width:80px;background:#0b0a08;border:1px solid rgba(212,175,55,.3);color:#f8e58c;padding:7px;font:500 13px Jost"></span>
                 </div>
               </div>
             </sc-for>
@@ -715,24 +725,24 @@
           <div style="font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#9a917c;margin-bottom:12px">Booking rules</div>
           <div style="background:#131109;border:1px solid rgba(212,175,55,.2);padding:16px 20px;display:flex;gap:14px 26px;flex-wrap:wrap;align-items:center;margin-bottom:10px">
             <span style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#9a917c">Open</span>
-              <input type="time" value="{{ sOpenFrom }}" onChange="{{ onOpenFrom }}" style="background:#0b0a08;border:1px solid rgba(212,175,55,.3);color:#f8e58c;padding:8px;font:500 14px Jost;color-scheme:dark">
+              <input type="time" value="{{ sOpenFrom }}" onChange="{{ onOpenFrom }}" aria-label="Dispatch opens at" style="background:#0b0a08;border:1px solid rgba(212,175,55,.3);color:#f8e58c;padding:8px;font:500 14px Jost;color-scheme:dark">
               <span style="font-size:12px;color:#9a917c">to</span>
-              <input type="time" value="{{ sOpenTo }}" onChange="{{ onOpenTo }}" style="background:#0b0a08;border:1px solid rgba(212,175,55,.3);color:#f8e58c;padding:8px;font:500 14px Jost;color-scheme:dark"></span>
+              <input type="time" value="{{ sOpenTo }}" onChange="{{ onOpenTo }}" aria-label="Dispatch closes at" style="background:#0b0a08;border:1px solid rgba(212,175,55,.3);color:#f8e58c;padding:8px;font:500 14px Jost;color-scheme:dark"></span>
             <span style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#9a917c">Cars</span>
-              <input type="number" value="{{ sCars }}" onChange="{{ onCars }}" style="width:60px;background:#0b0a08;border:1px solid rgba(212,175,55,.3);color:#f8e58c;padding:8px;font:500 14px Jost"></span>
+              <input type="number" value="{{ sCars }}" onChange="{{ onCars }}" aria-label="Number of cars" style="width:60px;background:#0b0a08;border:1px solid rgba(212,175,55,.3);color:#f8e58c;padding:8px;font:500 14px Jost"></span>
             <span style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#9a917c">Min notice</span>
-              <input type="number" value="{{ sLead }}" onChange="{{ onLead }}" style="width:60px;background:#0b0a08;border:1px solid rgba(212,175,55,.3);color:#f8e58c;padding:8px;font:500 14px Jost"><span style="font-size:12px;color:#9a917c">hrs</span></span>
+              <input type="number" value="{{ sLead }}" onChange="{{ onLead }}" aria-label="Minimum notice in hours" style="width:60px;background:#0b0a08;border:1px solid rgba(212,175,55,.3);color:#f8e58c;padding:8px;font:500 14px Jost"><span style="font-size:12px;color:#9a917c">hrs</span></span>
             <span style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#9a917c">Book up to</span>
-              <input type="number" value="{{ sAdv }}" onChange="{{ onAdv }}" style="width:60px;background:#0b0a08;border:1px solid rgba(212,175,55,.3);color:#f8e58c;padding:8px;font:500 14px Jost"><span style="font-size:12px;color:#9a917c">days</span></span>
+              <input type="number" value="{{ sAdv }}" onChange="{{ onAdv }}" aria-label="Maximum days ahead" style="width:60px;background:#0b0a08;border:1px solid rgba(212,175,55,.3);color:#f8e58c;padding:8px;font:500 14px Jost"><span style="font-size:12px;color:#9a917c">days</span></span>
           </div>
-          <div style="font-size:12.5px;color:#6f6753;margin-bottom:28px">Customers pick any time inside these hours. Each car covers one ride in a 2-hour window, when all cars are reserved around a time it can't be booked, and rides need the minimum notice above (no 10-minutes-from-now requests).</div>
+          <div style="font-size:12.5px;color:#8f846a;margin-bottom:28px">Customers pick any time inside these hours. Each car covers one ride in a 2-hour window, when all cars are reserved around a time it can't be booked, and rides need the minimum notice above (no 10-minutes-from-now requests).</div>
           <div style="font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#9a917c;margin-bottom:12px">Block / open hours</div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
             <sc-for list="{{ adminDayChips }}" as="dc" hint-placeholder-count="7">
               <button onClick="{{ dc.pick }}" style="{{ dc.style }}">{{ dc.label }}</button>
             </sc-for>
           </div>
-          <input type="date" value="{{ adminDate }}" onChange="{{ onAdminDate }}" style="background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:10px 14px;font:400 15px Jost;margin-bottom:18px;color-scheme:dark">
+          <input type="date" value="{{ adminDate }}" onChange="{{ onAdminDate }}" aria-label="Availability date" style="background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:10px 14px;font:400 15px Jost;margin-bottom:18px;color-scheme:dark">
           <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px">
             <sc-for list="{{ adminSlots }}" as="t" hint-placeholder-count="6">
               <button onClick="{{ t.toggle }}" style="{{ t.style }}">{{ t.label }} · {{ t.state }}</button>
@@ -753,23 +763,23 @@
                 <span style="min-width:180px"><span style="display:block;font-size:15px;color:#f5f1e6">{{ v.name }}</span><span style="display:block;font-size:12.5px;color:#9a917c;margin-top:2px">{{ v.model }}</span></span>
                 <span style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
                   <span style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#9a917c">Initial $</span>
-                  <input type="number" value="{{ v.flat }}" onChange="{{ v.onFlat }}" style="width:70px;background:#0b0a08;border:1px solid rgba(212,175,55,.3);color:#f8e58c;padding:8px;font:500 14px Jost"></span>
+                  <input type="number" value="{{ v.flat }}" onChange="{{ v.onFlat }}" aria-label="Initial fee in dollars" style="width:70px;background:#0b0a08;border:1px solid rgba(212,175,55,.3);color:#f8e58c;padding:8px;font:500 14px Jost"></span>
                   <span style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#9a917c">$/mi</span>
-                  <input type="number" step="0.25" value="{{ v.rate }}" onChange="{{ v.onRate }}" style="width:70px;background:#0b0a08;border:1px solid rgba(212,175,55,.3);color:#f8e58c;padding:8px;font:500 14px Jost"></span>
+                  <input type="number" step="0.25" value="{{ v.rate }}" onChange="{{ v.onRate }}" aria-label="Rate per mile in dollars" style="width:70px;background:#0b0a08;border:1px solid rgba(212,175,55,.3);color:#f8e58c;padding:8px;font:500 14px Jost"></span>
                   <button onClick="{{ v.toggle }}" style="{{ v.style }}">{{ v.state }}</button>
                 </span>
               </div>
             </sc-for>
           </div>
-          <div style="font-size:12.5px;color:#6f6753;margin-top:16px">Initial = flat fee shown to customers ("from $"); the per-mile rate is added on top by trip distance. Changes apply to the live site immediately.</div>
+          <div style="font-size:12.5px;color:#8f846a;margin-top:16px">Initial = flat fee shown to customers ("from $"); the per-mile rate is added on top by trip distance. Changes apply to the live site immediately.</div>
           <div style="font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#9a917c;margin:32px 0 12px">Initial pickup service area</div>
           <div style="background:#131109;border:1px solid rgba(212,175,55,.2);padding:16px 20px;display:flex;gap:12px 18px;flex-wrap:wrap;align-items:center">
             <input placeholder="Hub address, city or ZIP code" value="{{ adminHubQ }}" onChange="{{ onAdminHubQ }}" style="flex:1;min-width:190px;background:#0b0a08;border:1px solid rgba(212,175,55,.35);color:#f5f1e6;padding:10px 12px;font:400 14px Jost">
             <button onClick="{{ setHub }}" disabled="{{ mapBusy }}" style="background:none;border:1px solid rgba(212,175,55,.5);color:#d4af37;font:500 11px Jost;letter-spacing:.16em;text-transform:uppercase;padding:10px 14px;cursor:pointer" style-hover="color:#f8e58c">Set Hub</button>
             <span style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#9a917c">Radius</span>
-            <input type="number" value="{{ svcRadius }}" onChange="{{ onSvcRadius }}" style="width:70px;background:#0b0a08;border:1px solid rgba(212,175,55,.3);color:#f8e58c;padding:8px;font:500 14px Jost"><span style="font-size:12px;color:#9a917c">mi</span></span>
+            <input type="number" value="{{ svcRadius }}" onChange="{{ onSvcRadius }}" aria-label="Service radius in miles" style="width:70px;background:#0b0a08;border:1px solid rgba(212,175,55,.3);color:#f8e58c;padding:8px;font:500 14px Jost"><span style="font-size:12px;color:#9a917c">mi</span></span>
           </div>
-          <div style="font-size:12.5px;color:#6f6753;margin-top:12px">Current hub: {{ svcLabel }} · initial pickups welcomed within {{ svcRadius }} miles. Customers verifying a pickup outside this range see an out-of-area notice. {{ hubNote }}</div>
+          <div style="font-size:12.5px;color:#8f846a;margin-top:12px">Current hub: {{ svcLabel }} · initial pickups welcomed within {{ svcRadius }} miles. Customers verifying a pickup outside this range see an out-of-area notice. {{ hubNote }}</div>
         </sc-if>
 
         <sc-if value="{{ tabTeam }}" hint-placeholder-val="{{ false }}">
@@ -805,13 +815,13 @@
           <sc-if value="{{ teamMsgF }}" hint-placeholder-val="{{ false }}">
             <div style="font-size:13px;color:#9a917c;margin-top:12px">{{ teamMsg }}</div>
           </sc-if>
-          <div style="font-size:12.5px;color:#6f6753;margin-top:18px">Share the username and password with your team member directly. No third-party services involved.</div>
+          <div style="font-size:12.5px;color:#8f846a;margin-top:18px">Share the username and password with your team member directly. No third-party services involved.</div>
         </sc-if>
 
         <sc-if value="{{ tabReviews }}" hint-placeholder-val="{{ false }}">
           <div style="font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#9a917c;margin-bottom:14px">Pending reviews ({{ pendingCount }}) · {{ approvedCount }} published</div>
           <sc-if value="{{ noPending }}" hint-placeholder-val="{{ false }}">
-            <div style="background:#131109;border:1px dashed rgba(212,175,55,.25);padding:30px;text-align:center;font-size:14px;font-style:italic;color:#6f6753;margin-bottom:16px">Nothing awaiting approval.</div>
+            <div style="background:#131109;border:1px dashed rgba(212,175,55,.25);padding:30px;text-align:center;font-size:14px;font-style:italic;color:#8f846a;margin-bottom:16px">Nothing awaiting approval.</div>
           </sc-if>
           <div style="display:flex;flex-direction:column;gap:10px">
             <sc-for list="{{ pendingRows }}" as="p" hint-placeholder-count="0">
@@ -830,7 +840,7 @@
           </div>
           <div style="font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#9a917c;margin:30px 0 14px">Published on the site</div>
           <sc-if value="{{ noApproved }}" hint-placeholder-val="{{ true }}">
-            <div style="background:#131109;border:1px dashed rgba(212,175,55,.25);padding:26px;text-align:center;font-size:14px;font-style:italic;color:#6f6753">Nothing published yet. Approved reviews appear on the site and are listed here.</div>
+            <div style="background:#131109;border:1px dashed rgba(212,175,55,.25);padding:26px;text-align:center;font-size:14px;font-style:italic;color:#8f846a">Nothing published yet. Approved reviews appear on the site and are listed here.</div>
           </sc-if>
           <div style="display:flex;flex-direction:column;gap:10px">
             <sc-for list="{{ approvedRows }}" as="p" hint-placeholder-count="0">
@@ -1191,7 +1201,7 @@ class Component extends DCLogic {
     const maxDate = this.iso(new Date(Date.now() + c.maxAdvD * 864e5));
     const inputHandler = k => e => set({ [k]: e.target.value });
     const goldBtn = dis => 'flex:1;background:' + (dis ? '#2a2418' : 'linear-gradient(120deg,#b8912c,#e8c85c 45%,#f8e58c 55%,#b8912c)') +
-      ';color:' + (dis ? '#6f6753' : '#141005') + ';border:none;font:600 12px Jost;letter-spacing:.2em;text-transform:uppercase;padding:14px 20px;cursor:' + (dis ? 'not-allowed' : 'pointer');
+      ';color:' + (dis ? '#8f846a' : '#141005') + ';border:none;font:600 12px Jost;letter-spacing:.2em;text-transform:uppercase;padding:14px 20px;cursor:' + (dis ? 'not-allowed' : 'pointer');
     const tCheck = this.timeCheck(S.date, S.time);
     const puOk = S.puStreet.trim() && S.puCity.trim(), doOk = S.doStreet.trim() && S.doCity.trim();
     const phoneOk = this.validPhone(S.phone), emailOk = this.validEmail(S.email);
@@ -1265,8 +1275,9 @@ class Component extends DCLogic {
         const off = !!S.vehiclesOff[v.name];
         return {
           ...v, rate: '$' + (this.flats()[v.name] || 0), mi: '$' + this.fmtRate(this.rates()[v.name] || 0), off,
+          alt: v.name + ', ' + v.model + ', seats ' + v.pax,
           bookLabel: off ? 'Currently Unavailable' : 'Book This Car',
-          bookStyle: 'margin-top:14px;background:none;border:1px solid rgba(212,175,55,' + (off ? '.25' : '.5') + ');color:' + (off ? '#6f6753' : '#d4af37') + ';font:500 11px Jost;letter-spacing:.18em;text-transform:uppercase;padding:11px 14px;cursor:' + (off ? 'not-allowed' : 'pointer'),
+          bookStyle: 'margin-top:14px;background:none;border:1px solid rgba(212,175,55,' + (off ? '.25' : '.5') + ');color:' + (off ? '#8f846a' : '#d4af37') + ';font:500 11px Jost;letter-spacing:.18em;text-transform:uppercase;padding:11px 14px;cursor:' + (off ? 'not-allowed' : 'pointer'),
           book: () => { if (!off) this.go({ vehicle: v.name, step: 1 }); }
         };
       }),
@@ -1274,7 +1285,7 @@ class Component extends DCLogic {
       avgRating: avg, reviewTotal: approved.length + (approved.length === 1 ? ' rider review' : ' rider reviews'),
       reviewCards: approved.map(r => ({ ...r, stars: '★★★★★'.slice(0, r.stars) })),
       revThanks: S.revThanks, revFormOpen: !S.revThanks,
-      starPicks: [1, 2, 3, 4, 5].map(n => ({ pick: () => this.keep({ revStars: n }), style: 'background:none;border:none;font-size:26px;cursor:pointer;padding:0 2px;color:' + (n <= S.revStars ? '#f8e58c' : '#3a3424') })),
+      starPicks: [1, 2, 3, 4, 5].map(n => ({ pick: () => this.keep({ revStars: n }), label: 'Rate ' + n + (n === 1 ? ' star' : ' stars'), sel: S.revStars === n, style: 'background:none;border:none;font-size:26px;cursor:pointer;padding:0 2px;color:' + (n <= S.revStars ? '#f8e58c' : '#3a3424') })),
       revName: S.revName, onRevName: inputHandler('revName'),
       revText: S.revText, onRevText: inputHandler('revText'),
       revTag: S.revTag, onRevTag: e => set({ revTag: e.target.value }),
@@ -1292,6 +1303,8 @@ class Component extends DCLogic {
       faqs: faqData.map(([q, a], i) => ({ q, a, open: S.faqOpen === i, chev: S.faqOpen === i ? '−' : '+', toggle: () => this.keep({ faqOpen: S.faqOpen === i ? -1 : i }) })),
       isStep0: S.step === 0, isStep1: S.step === 1, isStep2: S.step === 2, isStep3: S.step === 3, isStep4: S.step === 4,
       stepDots: [0, 1, 2, 3, 4].map(i => ({ style: 'flex:1;height:2px;background:' + (i <= S.step ? '#d4af37' : '#2a2418') })),
+      stepLabel: 'Booking step ' + (S.step + 1) + ' of 5' + (S.step === 0 ? ', choose your car' : S.step === 1 ? ', date and time' : S.step === 2 ? ', trip details' : S.step === 3 ? ', review and request' : ', request received'),
+      sugNote: S.puSugs.length ? S.puSugs.length + ' pickup address suggestions available, press Enter to use the first or keep typing' : S.doSugs.length ? S.doSugs.length + ' drop-off address suggestions available, press Enter to use the first or keep typing' : '',
       tripOpts: ['Point-to-Point', 'Airport Transfer'].map(t => ({ name: t, pick: () => this.keep({ tripType: t }), style: this.chip(S.tripType === t, false) })),
       vehicleCards: this.vehicles().map(v => {
         const off = !!S.vehiclesOff[v.name], sel = S.vehicle === v.name;
